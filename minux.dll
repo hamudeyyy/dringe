@@ -1,0 +1,18 @@
+sig = "32 C0 40 84 ED 48 8B AC 24"
+flags = "+X-W-C"
+result = AOBScan(sig, flags)
+
+if result.Count ~= 1 then
+    messageDialog("Invalid signature", mtError, mbOK)
+else
+    local op = getAddress(result[0]) + 0x0D
+
+    if readBytes(op) ~= 0x75 then
+        messageDialog("Unexpected instruction", mtError, mbOK)
+    else
+        writeBytes(op, 0xEB, 0x32)
+        messageDialog("minux made good job", mtInformation, mbOK)
+    end
+end
+
+result.destroy()
